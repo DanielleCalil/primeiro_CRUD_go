@@ -1,4 +1,4 @@
-module github.com/primeiro_CRUD_go
+module github.com/DanielleCalil/primeiro_CRUD_go
 
 go 1.23.3
 

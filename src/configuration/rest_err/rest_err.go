@@ -1,5 +1,7 @@
 package rest_err
 
+import "net/http"
+
 type RestErr struct {
 	Message string `json:"message"`
 	Err string `json:"error"` 
@@ -16,27 +18,26 @@ func (r *RestErr) Error() string {
 	return r.Message
 }
 
-func NewRestErr(message, err string, code int, causes []Causes) *RestErr {
-	return &RestErr{
-		Message: message,
-		Err: err,
-		Code: code,
-		Causes: causes,
-	}
-}
-
 func NewBadRequestError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
-		Err: "bad request",
-		Code: http.StatusBadRequest
+		Err: "bad_request",
+		Code: http.StatusBadRequest,
+	}
+}
+
+func NewUnauthorizedRequestError(message string) *RestErr {
+	return &RestErr{
+		Message: message,
+		Err:     "unauthorized",
+		Code:    http.StatusUnauthorized,
 	}
 }
 
 func NewBadRequestValidationError(message string, causes []Causes) *RestErr {
 	return &RestErr{
 		Message: message,
-		Err: "bad request",
+		Err: "bad_request",
 		Code: http.StatusBadRequest,
 		Causes: causes,
 	}
@@ -45,7 +46,7 @@ func NewBadRequestValidationError(message string, causes []Causes) *RestErr {
 func NewInternalServerError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
-		Err: "internal server error",
+		Err: "internal_server_error",
 		Code: http.StatusInternalServerError,
 	}
 }
