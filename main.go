@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/database/mysql"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/logger"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller/routes"
@@ -17,6 +18,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	mysql.InitConnection()
 
 	//Init dependencies
 	service := service.NewUserDomainService()
