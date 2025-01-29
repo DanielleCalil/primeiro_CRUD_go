@@ -1,13 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 
-	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/database/mysql"
+	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/database/mongodb"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/logger"
-	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller/routes"
-	"github.com/DanielleCalil/primeiro_CRUD_go/src/model/service"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -19,11 +18,15 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	mysql.InitConnection()
+	database, err := mongodb.NewMongoDBConnection(context.Background())
+	if err != nil {
+		log.Fatalf(
+			"Error trying to connect to database, error=%s \n", 
+			err.Error())
+		return
+	}
 
-	//Init dependencies
-	service := service.NewUserDomainService()
-	userController := controller.NewUserControllerInterface(service)
+	userController := initDependencies(database)
 
 	router := gin.Default()
 

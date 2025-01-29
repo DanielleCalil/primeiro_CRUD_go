@@ -1,21 +1,21 @@
 package repository
 
 import (
-	"database/sql"
 
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/rest_err"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/model"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func NewUserRepository(
-	datebase *sql.DB,
+	database *mongo.Database,
 ) UserRepository {
 	return &userRepository{
-		datebase,
+		database,
 	}
 }
 type userRepository struct {
-	datebaseConnection *sql.DB
+	databaseConnection *mongo.Database
 }
 type UserRepository interface {
 	CreateUser(

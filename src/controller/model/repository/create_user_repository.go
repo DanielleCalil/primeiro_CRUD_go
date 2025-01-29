@@ -1,56 +1,38 @@
 package repository
 
 import (
-	"database/sql"
-	"fmt"
+	"context"
 	"os"
 
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/logger"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/rest_err"
+	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller/model/repository/entity/converter"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/model"
 	_ "github.com/go-sql-driver/mysql"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
-	SQL_USER_DB="SQL_USER_DB"
+	MONGODB_USER_DB = "MONGODB_USER_DB"
 )
-
-type userRepository struct {
-	databaseConnection *sql.DB
-}
 
 func (ur *userRepository) CreateUser (
 	userDomain model.UserDomainInterface,
 ) (model.UserDomainInterface, *rest_err.RestErr) {
 
 	logger.Info("Init createUser repository")
+	collection_name := os.Getenv(MONGODB_USER_DB)
 
-	tableName := os.Getenv(SQL_USER_DB)
+	collection := ur.databaseConnection.Collection(collection_name)
 
-	if tableName == "" {
-		tableName = "users"
-	}
+	value := converter.ConvertDomainToEntity(userDomain) 
 
-	value, err := userDomain.GetJSONValue() 
+	result, err := collection.InsertOne(context.Background(), value)
 	if err != nil {
 		return nil, rest_err.NewInternalServerError(err.Error())
 	}
 
-	name, email, password := value["name"].(string), value["email"].(string), value["password"].(string)
+	value.ID = result.InsertedID.(primitive.ObjectID)
 
-	query := fmt.Sprintf("INSERT INTO %s (name, email, password) VALUES (?, ?, ?)", tableName)
-
-	result, err := ur.databaseConnection.Exec(query, name, email, password)
-	if err != nil {
-		return nil, rest_err.NewInternalServerError(err.Error())
-	}
-
-	lastInsertID, err := result.LastInsertId()
-	if err != nil {
-		return nil, rest_err.NewInternalServerError(err.Error())
-	}
-
-	userDomain.SetID(fmt.Sprintf("%d", lastInsertID))
-
-	return userDomain, nil
+	return converter.ConvertEntityToDomain(*value), nil
 }
