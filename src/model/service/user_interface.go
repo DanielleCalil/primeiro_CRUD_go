@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/configuration/rest_err"
-	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller/model/repository"
+	"github.com/DanielleCalil/primeiro_CRUD_go/src/model/repository"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/model"
 )
 
@@ -17,9 +17,17 @@ type userDomainService struct {
 }
 
 type UserDomainService interface {
-	CreateUser(model.UserDomainInterface) (
+	CreateUserServices(model.UserDomainInterface) (
 		model.UserDomainInterface, *rest_err.RestErr)
+
+	FindUserByIDServices(
+		id string,
+	) (model.UserDomainInterface, *rest_err.RestErr)
+
+	FindUserByEmailServices(
+		id string,
+	) (model.UserDomainInterface, *rest_err.RestErr)
+
 	UpdatedUser(string, model.UserDomainInterface) *rest_err.RestErr
-	FindUser(string) (*model.UserDomainInterface, *rest_err.RestErr)
 	DeleteUser(string) *rest_err.RestErr
 }

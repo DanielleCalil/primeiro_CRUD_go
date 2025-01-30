@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller"
-	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller/model/repository"
+	"github.com/DanielleCalil/primeiro_CRUD_go/src/model/repository"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/model/service"
 	"go.mongodb.org/mongo-driver/mongo"
 )

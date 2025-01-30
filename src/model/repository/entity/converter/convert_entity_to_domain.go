@@ -1,7 +1,7 @@
 package converter
 
 import (
-	"github.com/DanielleCalil/primeiro_CRUD_go/src/controller/model/repository/entity"
+	"github.com/DanielleCalil/primeiro_CRUD_go/src/model/repository/entity"
 	"github.com/DanielleCalil/primeiro_CRUD_go/src/model"
 )
 
